@@ -1,4 +1,6 @@
 # DPyGreedy
-run before:\n
-cabal update\n
-cabal install matrix
+run before:
+
+cabal update  
+
+cabal install matrix  
