@@ -28,9 +28,10 @@ bdp :: (Ord a, Num a) => Int -> Int -> Int -> Int -> [a] -> Matrix Int -> Matrix
 bdp  i j b e orgn mx | (i == 1 && j == e)    = mx
 bdp  i j b e orgn mx | i == e || j == e      = bdp 1 b (b+1) e orgn mx
 bdp  i j b e orgn mx | otherwise             =
-    if cond i j orgn 
-        then bdp (i+1) (j+1) b e orgn (setElem (length (trim i j orgn)) (j,i) mx)
-        else bdp (i+1) (j+1) b e orgn (setElem (max3 (getElem (j-1) i mx) (getElem j (i+1) mx) (getElem (j-1) (i+1) mx) ) (j,i) mx)
+        if cond i j orgn 
+                then bdp (i+1) (j+1) b e orgn (setElem ((max3 (getElem (j-1) i mx) (getElem j (i+1) mx) (getElem (j-1) (i+1) mx) )+1) (j,i) mx)
+                else bdp (i+1) (j+1) b e orgn (setElem (max3 (getElem (j-1) i mx) (getElem j (i+1) mx) (getElem (j-1) (i+1) mx) ) (j,i) mx)
+        
 
 -- Recorre la matriz generada por bdp para obtener la subsequencia 
 -- adp :: Int       Coordenada I, tendria que ser 1
@@ -42,24 +43,12 @@ adp :: Ord t => Int -> Int -> [a] -> Matrix t -> t -> [a]
 adp i j orgn mx last | last > (max3 (getElem (j-1) i mx) (getElem j (i+1) mx) (getElem (j-1) (i+1) mx)) = trim i j orgn
 adp i j orgn mx last | otherwise = adp (fst maximum) (snd maximum) orgn mx last
                         where maximum = (max3ij ((getElem (j-1) i mx),i,j-1) ((getElem j (i+1) mx),i+1,j) ((getElem (j-1) (i+1) mx), i+1, j-1))
-
+                        
 -- Coordina bdp y adp
 dp :: (Ord a, Num a) => [a] -> [a]
 dp orgn =   let
-                l = length orgn
-                mx = bdp 1 2 2 (l+1) orgn (identity l)
-                ms = getElem l 1 mx
-            in
-                adp 1 l orgn mx ms
-
-
-
-
---ALGORITMO QUE NO FUNCIONA EN CIERTOS CASOS PERO SEGURO ES DP, EL QUE FUNCIONA NO SE SI ES DP
-
--- bdp  i j b e orgn mx | (i == 1 && j == e)    = mx
--- bdp  i j b e orgn mx | i == e || j == e      = bdp 1 b (b+1) e orgn mx
--- bdp  i j b e orgn mx | otherwise             =
-    --     if cond i j orgn 
-        --         then bdp (i+1) (j+1) b e orgn (setElem ((max3 (getElem (j-1) i mx) (getElem j (i+1) mx) (getElem (j-1) (i+1) mx) )+1) (j,i) mx)
-        --         else bdp (i+1) (j+1) b e orgn (setElem (max3 (getElem (j-1) i mx) (getElem j (i+1) mx) (getElem (j-1) (i+1) mx) ) (j,i) mx)
+    l = length orgn
+    mx = bdp 1 2 2 (l+1) orgn (identity l)
+    ms = getElem l 1 mx
+    in
+        adp 1 l orgn mx ms
