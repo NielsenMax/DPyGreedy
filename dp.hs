@@ -10,16 +10,16 @@ max3ij (av, ai, aj) (bv , bi, bj) (cv, ci, cj) = if av >= bv then (if av >= cv t
 
 -- Chekea que la subsecuencia entre i y j sea una SCC en base a si fue extendida en la casilla (i,j)
 cond2 :: Int -> Int -> Matrix Int -> Bool
-cond2 i j mx |j <= 0	= True
-	     |otherwise = getElem i j mx > (max3 (getElem i (j-1) mx) (getElem (i+1) j mx) (getElem (i+1) (j-1) mx)) 
+cond2 i j mx |j <= 0    = True
+             |otherwise = getElem i j mx > (max3 (getElem i (j-1) mx) (getElem (i+1) j mx) (getElem (i+1) (j-1) mx)) 
 
 --Checkea que los elementos en las posiciones i y j sean maryores a la suma de los elementos entre ellas y que la subsecuencia sin los elementos i y j es una SCC
 cond :: (Ord a, Num a) => Int -> Int -> [a] -> Matrix Int -> Bool
 cond i j orgn mx |j-i == 1 = True
-		 |otherwise= let
-				f = [ x | (x,a) <- zip orgn [1..], a > i && a < j ]
-		   	in
-			(orgn!!(i-1) >= sum f) && (orgn!!(j-1) >= sum f) && cond2 (i+1) (j-1) mx
+                 |otherwise= let
+                        f = [ x | (x,a) <- zip orgn [1..], a > i && a < j ]
+                    in
+                        (orgn!!(i-1) >= sum f) && (orgn!!(j-1) >= sum f) && cond2 (i+1) (j-1) mx
                  
 
 --Corta una lista apartir de la posicion a hasta b
@@ -38,7 +38,7 @@ bdp  i j b e orgn mx | (i == 1 && j == e)    = mx
 bdp  i j b e orgn mx | i == e || j == e      = bdp 1 b (b+1) e orgn mx
 bdp  i j b e orgn mx | otherwise             =
         if cond i j orgn mx
-                then bdp (i+1) (j+1) b e orgn (setElem (j-i+1) (i,j) mx)
+                then bdp (i+1) (j+1) b e orgn (setElem ((getElem (i+1) (j-1) mx)+2) (i,j) mx)
                 else bdp (i+1) (j+1) b e orgn (setElem (max3(getElem i (j-1) mx) (getElem (i+1) j mx) (getElem (i+1) (j-1) mx)) (i,j) mx)
         
 
