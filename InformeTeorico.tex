@@ -3,7 +3,7 @@
 \usepackage{graphicx}
 \usepackage{vmargin}
 \usepackage{fancyhdr}
-
+\usepackage[T1]{fontenc}
 \setpapersize{A4}
 \setmargins{2cm}		%margen izquierdo
 {3cm}				%margen superior
@@ -66,4 +66,54 @@
 \subsection*{Objetivo}
 El objetivo de este Informe Teorico es explicar y complementar con teoria la resoluci\'on de los siguientes problemas de Programaci\'on Din\'amica y Algoritmos Greedy asignados.
 \subsection*{Problema de Programaci\'on Din\'amica}
+Dado un arreglo $A[a_1,...,a_n]$ de enteros no negativos, encontrar una subsecuencia $A[a_1,...,a_j]$ de tama\~no m\'aximo tal que: i = j  \'o  i = j + 1 \'o para todo $r \geq 0$, valen las desigualdades $a_i_+_r \geq \sum_{k=i+r+1}^{j-r-1}a_k $ y $ a_j_-_r \geq \sum_{k=i+r+1}^{j-r-1}a_k$.
+Por ejemplo, en el arreglo [1,8,2,1,3,9,10] la subsecuencia [8,2,1,3,9] cumple la propiedad, ya que $ 8 \geq 2 + 1 + 3 $ y $ 9 \geq 2 + 1 + 3 (r=0) $ y adem\'as $ 2 \geq 1 $ y $ 3 \geq 1 $ (r=1).
+Escriba un algoritmo de programaci\'on din\'amica bottom-up para resolver el problema. La salida del algoritmo son dos \'indices $ i \leq j $ tales que $A[a_i,...,a_j]$ es una subsecuencia de tama\~no m\'aximo.
+\subsection*{Problema de Algoritmos Greedy}
+Dado un  \'arbol con pesos no negativos en los lados, se quiere resolver el problema de encontrar el m\'inimo camino desde la ra\'iz hasta una hoja. Considere el algoritmo greedy que, partiendo desde la ra\'iz como nodo actual, elige siempre el lado \textit{l} con menor peso. El nuevo nodo actual es
+el apuntado por \textit{l}. El algoritmo termina cuando el nodo actual es una hoja.
+\begin{itemize}
+    \item Encuentre un ejemplo en que el camino encontrado por el algoritmo no es \'optimo.
+    \item Encuentre una condici\'on \textit{C} sobre \'arboles de manera tal que, si un \'arbol cumple con \textit{C}, entonces el camino encontrado por el algoritmo en ese \'arbol es optimo. El \'arbol que se muestra en la figura debe cumplir la condici\'on. Sugerencia: piense en \'arboles con pesos muy grandes cerca de la ra\'iz y pesos muy chico cerca de las hojas.
+    %%%%%%%%%%%%%%%%%%%%%%%%%IMAGEN
+    \item Pruebe que la condici\'on encontrada en el punto anterior asegura que el algoritmo encuentra el \'optimo.
+\end{itemize}
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
