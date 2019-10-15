@@ -8,10 +8,12 @@ max3 a b c = if a >= b then (if a >= c then a else (if b >= c then b else c)) el
 max3ij :: Ord a1 => (a1, a2, b) -> (a1, a2, b) -> (a1, a2, b) -> (a2, b)
 max3ij (av, ai, aj) (bv , bi, bj) (cv, ci, cj) = if av >= bv then (if av >= cv then (ai,aj) else (if bv >= cv then (bi, bj) else (ci,cj))) else (if bv >= cv then (bi,bj) else (ci,cj))
 
---Checkea que los elementos en las posiciones a y b sean maryores a la suma de los elementos entre ellas
+-- Chekea que la subsecuencia entre i y j sea una SCC en base a si fue extendida en la casilla (i,j)
+cond2 :: Int -> Int -> Matrix Int -> Bool
 cond2 i j mx |j <= 0	= True
 	     |otherwise = getElem i j mx > (max3 (getElem i (j-1) mx) (getElem (i+1) j mx) (getElem (i+1) (j-1) mx)) 
 
+--Checkea que los elementos en las posiciones i y j sean maryores a la suma de los elementos entre ellas y que la subsecuencia sin los elementos i y j es una SCC
 cond :: (Ord a, Num a) => Int -> Int -> [a] -> Matrix Int -> Bool
 cond i j orgn mx |j-i == 1 = True
 		 |otherwise= let
