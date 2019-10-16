@@ -248,7 +248,8 @@
 	-- El Int es para la arista que da origen al nodo, en el caso de la raiz es 0
 	data Tree a = N Int a [Tree a] deriving (Show)
 	
-	-- Funcion que toma una listas de arboles y devuelve el arbol cuya arista que le da origen es la de menor peso
+	-- Funcion que toma una listas de arboles y devuelve el arbol cuya
+	--arista que le da origen es la de menor peso
 	tmin :: [Tree a] -> Tree a
 	tmin [x] = x
 	tmin (x:xs) = let
