@@ -4,6 +4,7 @@
 \usepackage{vmargin}
 \usepackage{fancyhdr}
 \usepackage[T1]{fontenc}
+\usepackage{multirow}
 \usepackage{tikz}
 \usepackage[spanish,es-noshorthands]{babel}
 \usepackage{minted}
@@ -128,6 +129,241 @@
 		\item Pruebe que la condici\'on encontrada en el punto anterior asegura que el algoritmo encuentra el \'optimo.
 	\end{itemize}
 	%%%%%%%%%%%%%%%%%%%%%%%%%ARBOL2
+	\newpage
+	\section*{\LARGE Problema Programaci\'on Din\'amica}
+	\subsection*{Conceptos B\'asicos}
+	Para resolver este problema utilizamos un algoritmo Bottom-Up, lo que hacemos es primero resolver los problemas m\'as chicos y combinar estas resoluciones para poder resolver los problemas m\'as grandes. Primero vamos a dejar en claro algunas definiciones que vamos a usar en la aplicaci\'on del algoritmo:
+La secuencia principal, aquella que se ingresa, la vamos a llamar \textbf{S}, la cantidad de elementos de \textbf{S} se va a llamar \textbf{N}.
+El enunciado hace referencia a tres condiciones posibles para que la subsecuencia de \textbf{S} cumpla con la propiedad correspondiente, a estas condiciones les asignamos un nombre a cada una. Por un lado tenemos la \textbf{C1}, es cuando dada la subsecuencia A[ai,...,aj] j es igual a i, por otro lado tenemos la \textbf{C2}, es cuando dada la subsecuencia A[ai,...,aj] i es igual a j+1, y por \'ultimo tenemos la \textbf{C3}, se da cuando tenemos una subsecuencia y para todo r â‰¥ 0, valen las desigualdades $a_{i+r} \geq \sum_{k=i+r+1}^{j-r-1}a_k $ y $ a_{j-r} \geq \sum_{k=i+r+1}^{j-r-1}a_k$.
+Cuando una subsecuencia de \textbf{S} cumple con \textbf{C1}, con \textbf{C2} o con \textbf{C3} esta va a  pasar a llamarse \textbf{SCC}. La \textbf{SCC} de mayor longitud va a llamarse \textbf{SCCO} y va a ser la subsecuencia que el algoritmo devuelve como resultado.
+	\subsection*{Explicaci\'on del Algoritmo}
+Para el inicio del algoritmo vamos a determinar dos propiedades, la primera es que si una subsecuencia de \textbf{S} es de longitud uno entonces es una \textbf{SCC} gracias a que cumple con la \textbf{C1} y la segunda es que si una subsecuencia de \textbf{S} es de longitud dos entonces es una \textbf{SCC} gracias a que cumple con la \textbf{C2}. Una vez determinado esto vamos a empezar con el algoritmo.\\
+El primer paso va a ser seleccionar todas las subsecuencias de \textbf{S} de longitud tres y comprueba si los elementos de los extremos son mayores o iguales al elemento del medio  y si se cumple esta condici\'on entonces se especifica en una matriz cual cumple con esta condici\'on y cu\'al no.\\
+El siguiente paso consiste en comprobar cuales subsecuencias de \textbf{S} de longitud cuatro cumplen la propiedad en que los extremos son mayores o iguales a la sumatoria de los elementos que no son de los extremos, la \textbf{C3},y distinguir en la matriz cuales cumplen con esto y cuales no.\\
+Cuando llegamos al tercer paso, el paso para analizar las subsecuencias de longitud 5, vamos a comprobar para todas las subsecuencias de longitud 5 si los elementos de los extremos son mayores o iguales a la sumatoria de los elementos que no est\'an en los extremos y comprobar que suceda lo mismo en la subsecuencia conformada por los elementos que no se encuentran en los extremos, la \textbf{C3},  pero como anteriormente ya calculamos aquellas subsecuencias que pueden ser conformadas por estos elementos que no se encuentran en los extremos entonces vamos a tener que buscar la respuesta a este c\'alculo en la matriz en donde se guardaron los datos anteriormente.\\
+Por ejemplo: En el caso de la Secuencia [1,8,2,1,3,9,10] en el tercer paso analizando la subsecuencia [8,2,1,3,9] cuando se tenga que comprobar si la subsecuencia [2,1,3] cumple con la \textbf{C3} este c\'alculo ya fue realizado y almacenado en la matriz mencionada anteriormente, entonces solo hay que buscar este resultado y no calcularlo.\\
+
+Aunque parezca ser un algoritmo de fuerza bruta, este aprovecha los c\'alculos que se llevan a cabo durante el proceso utiliz\'andolos m\'as adelante. Esta es la diferencia principal entre resolver este problema con fuerza bruta y resolverlo con Bottom-Up.
+
+\subsection*{Utilizaci\'on de matriz}
+Utilizaremos la lista [1,8,2,1,3,9,10] de ejemplo como \textbf{\textit{S}}.
+ Para comenzar con la inicializaci\'on crearemos una matriz identidad de 7 por 7 (N*N).
+Las casillas de valor uno que se encuentran a lo largo de la diagonal de la matriz representan que para las subsecuencias definidas entre las posiciones i y j de S (siendo i y j las coordenadas de la casilla) la \textbf{\textit{SCC}} contenida en dicha subsecuencia es de longitud uno.\\
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+ & 1 & 8 & 2 & 1 & 3 & 9 & 10 \\ \hline
+ i/j & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+ 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ \hline
+ 2 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\ \hline
+ 3 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ \hline
+ 4 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\ \hline
+ 5 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\ \hline
+ 6 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\ \hline
+ 7 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+\newpage
+Una vez calculada la diagonal comenzar\'a el algoritmo, siguiendo el siguiente pseudoc\'odigo:\\
+
+condicion i j S matriz:
+\newline
+S[i] >= sum S[i+1 ... j-1] and S[j] >= sum S[i+1 ... j-1] and  matriz[i+1][j-1] > max(matriz[ i+1 ][ j-2 ],matriz[ i+2 ][ j -1 ],matriz[ i+2 ][ j-2 ])
+\newline
+if condicion i j S matriz:
+\newline
+		\hspace{3cm} matriz[i][j] = matriz[i+1][j-1] + 2
+		\newline
+	else:
+	\newline
+	\hspace{3cm} matriz[i][j] = max(matriz[ i ][ j-1 ],matriz[ i+1 ][ j ],matriz[ i+1 ][ j-1 ])
+\newline
+
+Primero tomara una casilla y sus coordenadas (i,j). Comprobar\'a si el elemento de \textbf{\textit{S}} en i y el elemento de \textbf{\textit{S}} en j son mayores o iguales a la sumatoria de los elementos de \textbf{\textit{S}} comprendidos entre i y j, tambi\'en comprobaremos si la subsecuencia sin los elementos i y j de \textbf{\textit{S}} tambi\'en es una \textbf{\textit{SCC}}. Si esto se cumple implica que la subsecuencia de \textbf{\textit{S}} delimitada por i y j es una \textbf{\textit{SCC}}, por ende esta se pudo extender una vez m\'as que la anterior encontrada. Aqu\'i es donde podemos observar la ventaja de nuestro algoritmo DP frente a la fuerza bruta. No hace falta calcular si la condici\'on C3 se cumple hacia dentro recursivamente, dado que ya lo tenemos calculado en las casillas aleda\~nas. \'unicamente tenemos que tomar la subsecuencia sin los elementos extremos y a\~nadirle 2, la longitud de esta se encuentra en la casilla (i+1,j-1).\\
+ Si la comprobaci\'on resultara falsa el algoritmo buscar\'a cual es el mayor valor entre las casillas a su izquierda, debajo y debajo a su izquierda de esta. Almacena este valor en vez de la nueva longitud de la \textbf{\textit{SCC}}, ya que este valor ser\'a el valor de la \textbf{\textit{SCC}} contenida en esta subsecuencia delimitada por i y j.\\
+
+
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+ & 1 & 8 & 2 & 1 & 3 & 9 & 10 \\ \hline
+ i/j & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+ 1 & 1 & 2 & 2 & 2 & 4 & 5 & 5 \\ \hline
+ 2 & 0 & 1 & 2 & 2 & 4 & 5 & 5 \\ \hline
+ 3 & 0 & 0 & 1 & 2 & 3 & 3 & 3 \\ \hline
+ 4 & 0 & 0 & 0 & 1 & 2 & 2 & 2 \\ \hline
+ 5 & 0 & 0 & 0 & 0 & 1 & 2 & 2 \\ \hline
+ 6 & 0 & 0 & 0 & 0 & 0 & 1 & 2 \\ \hline
+ 7 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+Una vez calculada la matriz encontraremos la \textbf{\textit{SCCO}} en base a que la longitud de esta se encuentra almacena en la esquina superior derecha de la matriz, llamaremos a este valor E. Por lo tanto buscaremos en que casilla la \textbf{\textit{SCCO}} realiza su \'ultima extensi\'on.\\
+Para eso nos fijamos cual es el mayor valor entre la casilla izquierda, la de debajo y la de debajo a la izquierda. Si el mayor valor coincide con E nos moveremos a esa casilla y volveremos a mirar las 3 casillas aleda\~nas. Si el valor es menor sabremos que en esa casilla la \textbf{\textit{SCCO}} realizo su ultima extension. Siguiendo esta recursi\'on de comprobar si el mayor valor aleda\~no es menor a E podremos encontrar facilmente que subsecuencia de \textbf{\textit{S}} es la \textbf{\textit{SCCO}}, ya que en las coordenadas i y j de la casilla en donde se realiza la \'ultima extensi\'on representan la posici\'on de inicio y la final de la subsecuencia de \textbf{\textit{S}} respectivamente.\\
+
+
+
+	\subsection*{Prueba de optimalidad }
+	Debemos probar que nuestra excursi\'on nos lleva a una soluci\'on \'optima
+		\begin{center}
+			DP[i,j] nos devuelve el largo de la SCC en la subsecuencia S[i..j]\\
+	
+	SCCO (S[i..j]) nos devuelve la SCCO de la subsecuencia S
+		\end{center}
+
+\begin{tabbing}
+		Si \=S[i] >= Sum S[(i+1)...(j-1)] y S[j] >= Sum S[(i+1)...(j-1)]  con i = 1\\
+	
+		\>	Sea \=r[1..k] = SCCO (S[i..j]) con DP[i,j] = k \\
+		
+		\>\>	r[k] = S[j] y r[1] = S[i]
+	\end{tabbing}      
+	Si r[1..k] no incluye a S[i] y S[j] como su primer y \'ltimo elemento podr\'iamos extender a r ya que S[i] >= Sum S[(i+1)...(j-1)] y S[j] >= Sum S[(i+1)..(j-1)]\\
+	Luego r[2..k-1] es una SCC de S[i+1...j-1]
+
+\begin{center}
+		Que me gustar\'ia que pase?\\
+\end{center}
+	Me gustar\'ia que:\\
+	
+	r[2..k-1] sea SCCO de S[i+1...j-1]
+	
+	Supongamos que \textbf{\textit{w}} es una SCC de m\'as larga  de S[i+1...j-1]\\
+	
+	Es decir que |w| > k - 2 \textit{(k - (1 + 1)  dado que es i + 1 y j - 1)}\\
+	
+	Luego concatenando w con r[k]
+	\begin{center}
+		[w[i]] ++ r[k] ++ w[j]
+	\end{center}
+	
+	obtenemos una SCC de S[i..j] con | [w[i]] ++ r[k] ++ w[j] | > k
+	\begin{center}
+		Contradicci\'on!
+	\end{center}
+	
+	\begin{flushleft}
+		Entonces, DP[i+1,j-1] = k - 2 lo que implica que
+	DP[i,j] = DP[i+1,j-1] + 2 en el caso S[1] >= Sum S[2..(j-1)] y S[j] >= Sum S[2..(j-1)]
+	\end{flushleft}
+	
+	\begin{flushleft}
+		Los otros casos son similares
+	\end{flushleft}
+	\subsection*{Implementaci\'on}
+	Para la implementaci\'on utilizamos el m\'odulo de haskell Data.Matrix que implementa funciones \'utiles para trabajar con matrices.\\
+	
+	La funci\'on identity n crea una matriz de identidad de n por n.\\
+	
+	La funci\'on getElem j i mx obtiene el elemento (i,j) de la matriz mx.\\
+	
+	La funci\'on setElem a j i mx escribe el elemento (i,j) de la matriz mx con el valor a.\\
+		\begin{minted}{haskell}
+	import Data.Matrix
+
+--Calcula el maximo entre 3 elementos
+max3 :: Ord a => a -> a -> a -> a  
+max3 a b c = if a >= b then 
+    (if a >= c then a else 
+    (if b >= c then b else c)) else 
+    (if b >= c then b else c)
+
+--Calcula el maximo entre 3 tuplas de 3 elementos y devuelve una tupla de 2 elementos
+max3ij :: Ord a1 => (a1, a2, b) -> (a1, a2, b) -> (a1, a2, b) -> (a2, b)
+max3ij (av, ai, aj) (bv , bi, bj) (cv, ci, cj) = if av >= bv then 
+    (if av >= cv then (ai,aj) else 
+    (if bv >= cv then (bi, bj) else (ci,cj))) else 
+    (if bv >= cv then (bi,bj) else (ci,cj))
+
+-- Chekea que la subsecuencia entre i y j sea una SCC en base a si fue extendida en la casilla (i,j)
+cond2 :: Int -> Int -> Matrix Int -> Bool
+cond2 i j mx |j <= 0    = True
+             |otherwise = getElem i j mx > (max3 
+                (getElem i (j-1) mx) 
+                (getElem (i+1) j mx) 
+                (getElem (i+1) (j-1) mx)) 
+
+--Checkea que los elementos en las posiciones i y j sean maryores a la suma 
+--de los elementos entre ellas y que la subsecuencia sin los elementos i y j es una SCC
+cond :: (Ord a, Num a) => Int -> Int -> [a] -> Matrix Int -> Bool
+cond i j orgn mx |j-i == 1 = True
+                 |otherwise= let
+                        f = [ x | (x,a) <- zip orgn [1..], a > i && a < j ]
+                    in
+                        (orgn!!(i-1) >= sum f) && (orgn!!(j-1) >= sum f) && cond2 (i+1) (j-1) mx
+                 
+
+--Corta una lista apartir de la posicion a hasta b
+trim :: (Num a1, Enum a1, Ord a1) => a1 -> a1 -> [a2] -> [a2]
+trim a b orgn = [ x | (x,i) <- zip orgn [1..], i >= a && i <= b ]
+
+-- Calcula la matriz que permite hacer el calculo del algoritmo
+-- bdp :: Int          Coordenada I
+-- -> Int              Coordenada J
+-- -> Int              Inicio, generalmente es 2
+-- -> Int              Fin, Uno mas que el largo de la lista
+-- -> [Int]            Lista de input
+-- -> Matrix Int       Matriz en la q va la respuesta
+bdp :: (Ord a, Num a) => Int -> Int -> Int -> Int -> [a] -> Matrix Int -> Matrix Int
+bdp  i j b e orgn mx | (i == 1 && j == e)    = mx
+bdp  i j b e orgn mx | i == e || j == e      = bdp 1 b (b+1) e orgn mx
+bdp  i j b e orgn mx | otherwise             =
+        if cond i j orgn mx
+                then bdp (i+1) (j+1) b e orgn (setElem ((getElem (i+1) (j-1) mx)+2) (i,j) mx)
+                else bdp (i+1) (j+1) b e orgn (setElem (max3
+                    (getElem i (j-1) mx) 
+                    (getElem (i+1) j mx) 
+                    (getElem (i+1) (j-1) mx)) 
+                    (i,j) mx)
+        
+
+-- Recorre la matriz generada por bdp para obtener la subsequencia 
+-- adp :: Int       Coordenada I, tendria que ser 1
+-- -> Int           Coordenada J, tendria que ser el largo de la lista
+-- -> [Int]         Lista del input
+-- -> Matrix Int    Matriz precalculada
+-- -> Int           Longitud de la subsequencia, 
+--                  elemento de la matriz en la posicion I = 1 y J = Largo de la lista
+adp :: Ord t => Int -> Int -> [a] -> Matrix t -> t -> [a]
+adp i j orgn mx last | last > (max3
+                                (getElem i (j-1) mx) 
+                                (getElem (i+1) j mx) 
+                                (getElem (i+1) (j-1) mx)) 
+                                = trim i j orgn
+adp i j orgn mx last | otherwise = adp (fst maximum) (snd maximum) orgn mx last
+        		where 	maximum = (max3ij 
+        		                    ((getElem i (j-1) mx),i,j-1)    
+        		                    ((getElem (i+1) j mx),i+1,j) 
+        		                    ((getElem (i+1) (j-1) mx), i+1, j-1))
+                        
+-- Coordina bdp y adp
+dp :: (Ord a, Num a) => [a] -> [a]
+dp orgn =   let
+    l = length orgn
+    mx = bdp 1 2 2 (l+1) orgn (identity l)
+    ms = getElem 1 l mx
+    in
+        adp 1 l orgn mx ms
+
+ \end{minted}
+ \subsection*{An\'alisis del costo de DP frente a Fuerza Bruta}
+ Fuerza Bruta:\\
+calcular si una subsecuencia cumple la condicion: \textbf{\textit{O($n^{2}$)}}\\
+calcular todas las subsecuencias: \textbf{\textit{O($n^{2}$)}}\\
+Costo total: \textbf{\textit{O($n^{4}$)}}\\
+Programaci\'on Din\'amica:\\
+calcular si una subsecuencia cumple la condici\'on: O(n)\\
+calcular las subsecuencias: \textbf{\textit{O($n^{2}$)}}\\
+Costo total: \textbf{\textit{O($n^{3}$)}}\\
+
+Como podemos observar nuestro costo al implementar DP disminuye en un factor de N para el largo de la secuencia de entrada.
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
 	\begin{center}
 		\section*{\LARGE Problema Greedy}
 	\end{center}
@@ -240,7 +476,7 @@
 	\end{center}
 	Si bien el \'arbol se encuentra ordenado por ramas, tomar las aristas de menor peso no nos lleva a la rama de menor peso. Tomar las aristas de menor peso resultar\'ia en el camino \textbf{\textit{\{A,E,F\}}} con un costo igual a 11. Mientras que el camino m\'as liviano de la ra\'iz a una hoja se encuentra a la izquierda, \textbf{\textit{\{A,B,C\}}} con un costo de 10.\\
 	Esto muestra que adem\'as se debe cumplir la condici\'on \textbf{\textit{C1}}.
-	Esta condici\'on establece que las aristas hermanas deben estar ordenadas por peso de forma creciente. Esto implica que la arista m\'as a la izquierda siempre ser\'a la de menor peso. A su vez, gracias a la condici\'on \textbf{\textit{C2}}, la rama más izquierda ser\'a la de menor peso. \\
+	Esta condici\'on establece que las aristas hermanas deben estar ordenadas por peso de forma creciente. Esto implica que la arista m\'as a la izquierda siempre ser\'a la de menor peso. A su vez, gracias a la condici\'on \textbf{\textit{C2}}, la rama m\'as izquierda ser\'a la de menor peso. \\
 	De esta forma se prueba que siempre la rama m\'as izquierda contendr\'a las aristas de menor peso con respecto a sus hermanas y adem\'as llevar\'a al camino m\'as liviano hacia una hoja. \\
 	Probando as\'i que la elecci\'on de la arista m\'as liviana siempre llevar\'a a la rama de menor peso, es decir al camino de menor peso de la ra\'iz a una hoja, siempre que el \'arbol cumpla con las condiciones \textbf{\textit{C1}} y \textbf{\textit{C2}}.
 	\subsection*{Implementaci\'on del algoritmo Greedy}
