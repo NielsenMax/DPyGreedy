@@ -6,6 +6,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{tikz}
 \usepackage[spanish,es-noshorthands]{babel}
+\usepackage{minted}
 \setpapersize{A4}
 \setmargins{2cm}		%margen izquierdo
 {3cm}				%margen superior
@@ -17,118 +18,252 @@
 {0.5cm}				%espacio entre el texto y el pie de pagina
 
 \begin{document}
-%%%%%%%%%%%%%%%Pie de Pagina y Encabezado
-\pagestyle{fancy}
-\renewcommand{\headrulewidth}{0.4pt}
-\renewcommand{\footrulewidth}{0.4pt}
-\fancyhead[LO,LE]{Algoritmos y Estructuras de Datos Avanzadas}
-\fancyfoot[C]{15/10/2019}
-\fancyhead[R]{Nielsen Maximiliano, Uliassi Manuel}
-\fancyfoot[L]{6to Informatica}
-\fancyfoot[FR] {P\'agina \thepage}
-%%%%%%%%%%%%%%%Pie de Pagina y Encabezado
-
-%%%%%%%%%%%%%%%%%%%%%PORTADA
-\begin{titlepage}
-\null
-\vspace{4cm}
-\centering
-{\Huge Programaci\'on Din\'amica\\ y Greedy}
-
-\vspace{0.2cm}
-
-{\LARGE Algoritmos y Estructuras de Datos Avanzadas}
-
-\vspace{0.2cm}
-
-{\large Informe Te\'orico}
-
-\vspace{1.5cm}
-
-{\LARGE Nielsen Maximiliano - Uliassi Manuel}
-
-\vspace{0.15cm}
-
-{\large Docente: Juan Manuel Rabasedas}
-
-\vspace{0.15cm}
-
-{\large 6to Inform\'atica}
-
-\vspace{0.15cm}
-
-{\large Instituto Politecnico Superior Gral. San Martin}
-\vfill
-
-\end{titlepage}
-%%%%%%%%%%%%%%%%%%%%%PORTADA
-\begin{center}
-\section*{\LARGE Informe Te\'orico}
-\end{center}
-\subsection*{Objetivo}
-El objetivo de este Informe Teorico es explicar y complementar con teoria la resoluci\'on de los siguientes problemas de Programaci\'on Din\'amica y Algoritmos Greedy asignados.
-\subsection*{Problema de Programaci\'on Din\'amica}
-Dado un arreglo $A[a_1,...,a_n]$ de enteros no negativos, encontrar una subsecuencia $A[a_1,...,a_j]$ de tama\~no m\'aximo tal que: i = j  \'o  i = j + 1 \'o para todo $r \geq 0$, valen las desigualdades $a_{i+r} \geq \sum_{k=i+r+1}^{j-r-1}a_k $ y $ a_{j-r} \geq \sum_{k=i+r+1}^{j-r-1}a_k$.
-Por ejemplo, en el arreglo [1, 8, 2, 1, 3, 9, 10] la subsecuencia [8, 2, 1, 3, 9] cumple la propiedad, ya que $ 8 \geq 2 + 1 + 3 $ y $ 9 \geq 2 + 1 + 3 (r=0) $ y adem\'as $ 2 \geq 1 $ y $ 3 \geq 1 $ (r=1).
-Escriba un algoritmo de programaci\'on din\'amica bottom-up para resolver el problema. La salida del algoritmo son dos \'indices $ i \leq j $ tales que $A[a_i,...,a_j]$ es una subsecuencia de tama\~no m\'aximo.
-\subsection*{Problema de Algoritmos Greedy}
-Dado un  \'arbol con pesos no negativos en los lados, se quiere resolver el problema de encontrar el m\'inimo camino desde la ra\'iz hasta una hoja. Considere el algoritmo greedy que, partiendo desde la ra\'iz como nodo actual, elige siempre el lado \textit{l} con menor peso. El nuevo nodo actual es
-el apuntado por \textit{l}. El algoritmo termina cuando el nodo actual es una hoja.
-\begin{itemize}
-    \item Encuentre un ejemplo en que el camino encontrado por el algoritmo no es \'optimo.
-    \item Encuentre una condici\'on \textit{C} sobre \'arboles de manera tal que, si un \'arbol cumple con \textit{C}, entonces el camino encontrado por el algoritmo en ese \'arbol es optimo. El \'arbol que se muestra en la figura debe cumplir la condici\'on. Sugerencia: piense en \'arboles con pesos muy grandes cerca de la ra\'iz y pesos muy chico cerca de las hojas.
-\newline
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ARBOL
-\tikzset{
-  treenode/.style = {shape=circle,draw, align=center,bottom color=blue!30, top color=blue!30},
-  root/.style     = {treenode, font=\large,},
-  env/.style      = {treenode, font=\large},
-  dummy/.style    = {circle,draw}
-}
-\begin{center}
-\begin{tikzpicture}
-	 [
-    sibling distance        = 3.5cm,
-    level distance          = 2cm,
-    edge from parent/.style = {draw, -latex},
-    every node/.style       = {font=\large},
-  ]
-	\node [root] {A}
+	%%%%%%%%%%%%%%%Pie de Pagina y Encabezado
+	\pagestyle{fancy}
+	\renewcommand{\headrulewidth}{0.4pt}
+	\renewcommand{\footrulewidth}{0.4pt}
+	\fancyhead[LO,LE]{Algoritmos y Estructuras de Datos Avanzadas}
+	\fancyfoot[C]{15/10/2019}
+	\fancyhead[R]{Nielsen Maximiliano, Uliassi Manuel}
+	\fancyfoot[L]{6to Informatica}
+	\fancyfoot[FR] {P\'agina \thepage}
+	%%%%%%%%%%%%%%%Pie de Pagina y Encabezado
+	
+	%%%%%%%%%%%%%%%%%%%%%PORTADA
+	\begin{titlepage}
+		\null
+		\vspace{4cm}
+		\centering
+		{\Huge Programaci\'on Din\'amica\\ y Greedy}
+		
+		\vspace{0.2cm}
+		
+		{\LARGE Algoritmos y Estructuras de Datos Avanzadas}
+		
+		\vspace{0.2cm}
+		
+		{\large Informe Te\'orico}
+		
+		\vspace{1.5cm}
+		
+		{\LARGE Nielsen Maximiliano - Uliassi Manuel}
+		
+		\vspace{0.15cm}
+		
+		{\large Docente: Juan Manuel Rabasedas}
+		
+		\vspace{0.15cm}
+		
+		{\large 6to Inform\'atica}
+		
+		\vspace{0.15cm}
+		
+		{\large Instituto Politecnico Superior Gral. San Martin}
+		\vfill
+		
+	\end{titlepage}
+	%%%%%%%%%%%%%%%%%%%%%PORTADA
+	\begin{center}
+		\section*{\LARGE Informe Te\'orico}
+	\end{center}
+	\subsection*{Objetivo}
+	El objetivo de este Informe Teorico es explicar y complementar con teoria la resoluci\'on de los siguientes problemas de Programaci\'on Din\'amica y Algoritmos Greedy asignados.
+	\subsection*{Problema de Programaci\'on Din\'amica}
+	Dado un arreglo $A[a_1,...,a_n]$ de enteros no negativos, encontrar una subsecuencia $A[a_1,...,a_j]$ de tama\~no m\'aximo tal que: i = j  \'o  i = j + 1 \'o para todo $r \geq 0$, valen las desigualdades $a_{i+r} \geq \sum_{k=i+r+1}^{j-r-1}a_k $ y $ a_{j-r} \geq \sum_{k=i+r+1}^{j-r-1}a_k$.
+	Por ejemplo, en el arreglo [1, 8, 2, 1, 3, 9, 10] la subsecuencia [8, 2, 1, 3, 9] cumple la propiedad, ya que $ 8 \geq 2 + 1 + 3 $ y $ 9 \geq 2 + 1 + 3 (r=0) $ y adem\'as $ 2 \geq 1 $ y $ 3 \geq 1 $ (r=1).
+	Escriba un algoritmo de programaci\'on din\'amica bottom-up para resolver el problema. La salida del algoritmo son dos \'indices $ i \leq j $ tales que $A[a_i,...,a_j]$ es una subsecuencia de tama\~no m\'aximo.
+	\subsection*{Problema de Algoritmos Greedy}
+	Dado un  \'arbol con pesos no negativos en los lados, se quiere resolver el problema de encontrar el m\'inimo camino desde la ra\'iz hasta una hoja. Considere el algoritmo greedy que, partiendo desde la ra\'iz como nodo actual, elige siempre el lado \textit{l} con menor peso. El nuevo nodo actual es
+	el apuntado por \textit{l}. El algoritmo termina cuando el nodo actual es una hoja.
+	\begin{itemize}
+		\item Encuentre un ejemplo en que el camino encontrado por el algoritmo no es \'optimo.
+		\item Encuentre una condici\'on \textit{C} sobre \'arboles de manera tal que, si un \'arbol cumple con \textit{C}, entonces el camino encontrado por el algoritmo en ese \'arbol es optimo. El \'arbol que se muestra en la figura debe cumplir la condici\'on. Sugerencia: piense en \'arboles con pesos muy grandes cerca de la ra\'iz y pesos muy chico cerca de las hojas.
+		\newline
+		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%ARBOL
+		\tikzset{
+			treenode/.style = {shape=circle,draw, align=center,bottom color=blue!30, top color=blue!30},
+			root/.style     = {treenode, font=\large,},
+			env/.style      = {treenode, font=\large},
+			dummy/.style    = {circle,draw}
+		}
+		\begin{center}
+			\begin{tikzpicture}
+			[
+			sibling distance        = 3.5cm,
+			level distance          = 2cm,
+			edge from parent/.style = {draw, -latex},
+			every node/.style       = {font=\large},
+			]
+			\node [root] {A}
 			child { node [env] {B} [sibling distance=2cm]
-					child { node [env] {E} 
+				child { node [env] {E} 
 					edge from parent node [left] {1}
-					}
-					child { node [env] {F} 
+				}
+				child { node [env] {F} 
 					edge from parent node [right] {2}
-					}
-			edge from parent node [above] {0}
+				}
+				edge from parent node [above] {0}
 			}
 			child { node [env] {C} [sibling distance=2cm]
-					child { node [env] {H} 
+				child { node [env] {H} 
 					edge from parent node [left] {1}
-					}
-					child { node [env] {I} 
+				}
+				child { node [env] {I} 
 					edge from parent node [right] {1}
-					}
-			edge from parent node [left] {3}
+				}
+				edge from parent node [left] {3}
 			}
 			child { node [env] {D} [sibling distance=2cm]
-					child { node [env] {J}
+				child { node [env] {J}
 					edge from parent node [left] {2}
- 					}
-					child { node [env] {K} 
-					edge from parent node [right] {0}
-					}
-			edge from parent node [above] {7}
+				}
+				child { node [env] {K} 
+					edge from parent node [right] {}
+				}
+				edge from parent node [above] {7}
 			};
-\end{tikzpicture}
-\end{center}
-%%%%%%%%%%%%%%%%%%%%%%%%%
-    \item Pruebe que la condici\'on encontrada en el punto anterior asegura que el algoritmo encuentra el \'optimo.
-\end{itemize}
-%%%%%%%%%%%%%%%%%%%%%%%%%ARBOL2
-
-%%%%%%%%%%%%%%%%%%%%%%%%%
+			\end{tikzpicture}
+		\end{center}
+		%%%%%%%%%%%%%%%%%%%%%%%%%
+		\item Pruebe que la condici\'on encontrada en el punto anterior asegura que el algoritmo encuentra el \'optimo.
+	\end{itemize}
+	%%%%%%%%%%%%%%%%%%%%%%%%%ARBOL2
+	\begin{center}
+		\section*{\LARGE Problema Greedy}
+	\end{center}
+	\subsection*{No \'optimo}
+	El algoritmo planteado no resulta \'optimo para cualquier tipo de \'arbol. Esto se puede ver en el siguiente ejemplo:\\
+	\tikzset{
+		treenode/.style = {shape=circle,draw, align=center,bottom color=blue!30, top color=blue!30},
+		root/.style     = {treenode, font=\large,},
+		env/.style      = {treenode, font=\large},
+		dummy/.style    = {circle,draw}
+	}
+	\begin{center}
+		\begin{tikzpicture}
+		[
+		sibling distance        = 3.5cm,
+		level distance          = 2cm,
+		edge from parent/.style = {draw, -latex},
+		every node/.style       = {font=\large},
+		]
+		\node [root] {A}
+		child { node [env] {B} [sibling distance=2cm]
+			child { node [env] {C} 
+				edge from parent node [left] {4}
+			}
+			child { node [env] {D} 
+				edge from parent node [right] {5}
+			}
+			edge from parent node [above] {1}
+		}
+		child { node [env] {E} [sibling distance=2cm]
+			child { node [env] {F} 
+				edge from parent node [left] {1}
+			}
+			child { node [env] {G} 
+				edge from parent node [right] {2}
+			}
+			edge from parent node [left] {2}
+		}
+		child { node [env] {H} [sibling distance=2cm]
+			child { node [env] {I}
+				edge from parent node [left] {2}
+			}
+			child { node [env] {J} 
+				edge from parent node [right] {3}
+			}
+			edge from parent node [above] {7}
+		};
+		\end{tikzpicture}
+	\end{center}
+	El algoritmo para este \'arbol devuelve el camino \textit{\{A,B,C\}} que tiene un peso de 5 mientras que la resoluci\'on del problema da como resultado el camino \textit{\{A,E,F\}}, que tiene peso de 3.
+	\\
+	El problema m\'as frecuente de este algoritmo es que al no tener en cuenta el \'arbol en su totalidad opta por una arista liviana con hijas pesadas cuando la opci\'on m\'as \'optima es optar por una arista pesada con hijas livianas.
+	\subsection*{Condiciones espec\'ificas}
+	El algoritmo no funciona para cualquier tipo de \'arbol. Establecimos dos condiciones espec\'ificas que debe cumplir un \'arbol para que el algoritmo de como resultado el m\'inimo camino de este.
+	\\
+	Una rama de un \'arbol es el camino desde la ra\'iz del mismo hacia cualquiera de sus hojas, el peso de una rama se calcula sumando el valor de cada arista por la que pasa la rama para poder llegar a la hoja correspondiente.
+	\\\\
+	\textbf{\textit{Condici\'on 1 (C1)}}\\
+	La primera condici\'on que debe complir el arbol es que las aristas hermanas deben estar ordenadas de forma creciente.
+	\\\\
+	\textbf{\textit{Condici\'on 2 (C2)}}\\
+	La segunda condici\'on que debe cumplir el \'arbol es que las ramas de este tienen que estar ordenadas de manera creciente seg\'un su peso.
+	\\\\
+	
+	La condici\'on \textbf{\textit{C2}} implica que el camino de la ra\'iz a una hoja m\'as liviano siempre ser\'a el que se encuentre m\'as a la izquierda. Sin embargo esta condici\'on por si sola no garantiza que tomando siempre la arista de menor peso encontraremos la rama de menor peso.\\
+	Veamos el siguiente ejemplo:
+	\tikzset{
+		treenode/.style = {shape=circle,draw, align=center,bottom color=blue!30, top color=blue!30},
+		root/.style     = {treenode, font=\large,},
+		env/.style      = {treenode, font=\large},
+		dummy/.style    = {circle,draw}
+	}
+	\begin{center}
+		\begin{tikzpicture}
+		[
+		sibling distance        = 3.5cm,
+		level distance          = 2cm,
+		edge from parent/.style = {draw, -latex},
+		every node/.style       = {font=\large},
+		]
+		\node [root] {A}
+		child { node [env] {B} [sibling distance=2cm]
+			child { node [env] {C} 
+				edge from parent node [left] {1}
+			}
+			child { node [env] {D} 
+				edge from parent node [right] {3}
+			}
+			edge from parent node [above] {9}
+		}
+		child { node [env] {E} [sibling distance=2cm]
+			child { node [env] {F} 
+				edge from parent node [left] {4}
+			}
+			child { node [env] {G} 
+				edge from parent node [right] {5}
+			}
+			edge from parent node [left] {7}
+		}
+		child { node [env] {H} [sibling distance=2cm]
+			child { node [env] {I}
+				edge from parent node [left] {6}
+			}
+			child { node [env] {J} 
+				edge from parent node [right] {7}
+			}
+			edge from parent node [above] {10}
+		};
+		\end{tikzpicture}
+	\end{center}
+	Si bien el \'arbol se encuentra ordenado por ramas, tomar las aristas de menor peso no nos lleva a la rama de menor peso. Tomar las aristas de menor peso resultar\'ia en el camino \textbf{\textit{\{A,E,F\}}} con un costo igual a 11. Mientras que el camino m\'as liviano de la ra\'iz a una hoja se encuentra a la izquierda, \textbf{\textit{\{A,B,C\}}} con un costo de 10.\\
+	Esto muestra que adem\'as se debe cumplir la condici\'on \textbf{\textit{C1}}.
+	Esta condici\'on establece que las aristas hermanas deben estar ordenadas por peso de forma creciente. Esto implica que la arista m\'as a la izquierda siempre ser\'a la de menor peso. A su vez, gracias a la condici\'on \textbf{\textit{C2}}, la rama más izquierda ser\'a la de menor peso. \\
+	De esta forma se prueba que siempre la rama m\'as izquierda contendr\'a las aristas de menor peso con respecto a sus hermanas y adem\'as llevar\'a al camino m\'as liviano hacia una hoja. \\
+	Probando as\'i que la elecci\'on de la arista más liviana siempre llevar\'a a la rama de menor peso, es decir al camino de menor peso de la ra\'iz a una hoja, siempre que el \'arbol cumpla con las condiciones \textbf{\textit{C1}} y \textbf{\textit{C2}}.
+	\subsection*{Implementaci\'on del algoritmo Greedy}
+	\begin{minted}{haskell}
+	-- El Int es para la arista que da origen al nodo, en el caso de la raiz es 0
+	data Tree a = N Int a [Tree a] deriving (Show)
+	
+	-- Funcion que toma una listas de arboles y devuelve el arbol cuya arista que le da origen es la de menor peso
+	tmin :: [Tree a] -> Tree a
+	tmin [x] = x
+	tmin (x:xs) = let
+	minim (x@(N xe xa xs)) (y@(N ye ya ys)) | xe > ye  = y
+	| xe <= ye = x
+	in
+	minim x (tmin xs) 
+	
+	-- Funcion que ejecuta el algoritmo Greedy
+	greedy :: Tree a -> [a]
+	greedy (N e a []) = [a]
+	greedy (N e a xs) = a : greedy (tmin xs)
+	
+	\end{minted}
+	%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
 
 
